@@ -5,7 +5,7 @@ from fastapi.templating import Jinja2Templates
 
 
 app = FastAPI() # Start - uvicorn home_work_5:app
-templates = Jinja2Templates(directory="hw_5_templates")
+templates = Jinja2Templates(directory="hw_5_templates") #  https://uguide.ru/tablica-osnovnykh-tegov-html-s-primerami
 
 users_db = []
 
@@ -21,7 +21,7 @@ async def get_all_users(request: Request) -> HTMLResponse:
     return templates.TemplateResponse("users.html", {"request": request, "users":users_db})
 
 
-@app.get('/user/{user_id}')
+@app.get('/users/{user_id}')
 def get_users(request: Request, user_id: int) -> HTMLResponse:
     try:
         return templates.TemplateResponse("users.html", {"request": request, "user":users_db[user_id - 1]})
@@ -59,7 +59,7 @@ async def put_users(user_id: int =
 
 @app.delete('/user/{user_id}')
 async def del_users(user_id: int = Path(ge=1, le=100, description='Enter User ID', example=1)) -> User:
-    for user in users:
+    for user in users_db:
         if user.id == user_id:
-            return users.pop(users.index(user))
+            return users_db.pop(users_db.index(user))
     raise HTTPException(status_code=404, detail="User was not found")
